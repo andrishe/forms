@@ -7,11 +7,12 @@ import CustomTextInput from '../../components/CustomTextInput';
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
+import CheckoutFormProvider, {
   PersonalInfo,
   PersonalInfoSchema,
 } from '../../contexts/CheckoutFormProvider';
 import { useCheckoutForm } from '../../contexts/CheckoutFormProvider';
+import RNPickerSelect from 'react-native-picker-select';
 
 export default function PersonalDetailsForm() {
   const { personalInfo, setPersonalInfo } = useCheckoutForm();
@@ -21,8 +22,7 @@ export default function PersonalDetailsForm() {
   });
 
   const onNext: SubmitHandler<PersonalInfo> = (data) => {
-    console.log('Données personnelles soumises:', data);
-    setPersonalInfo(data); // Assurez-vous que cette ligne est bien présente
+    setPersonalInfo(data);
     router.push('/checkout/payment');
   };
   return (
@@ -55,6 +55,15 @@ export default function PersonalDetailsForm() {
             containerStyle={{ flex: 1 }}
           />
         </View>
+
+        <RNPickerSelect
+          onValueChange={(value) => console.log(value)}
+          placeholder={{ label: 'Country' }}
+          items={countries.map((country) => ({
+            label: country.name,
+            value: country.code,
+          }))}
+        />
 
         <CustomTextInput
           name="phone"

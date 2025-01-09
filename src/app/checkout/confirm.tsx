@@ -7,27 +7,13 @@ import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { useCheckoutForm } from '../../contexts/CheckoutFormProvider';
 
 export default function ConfirmForm() {
-  const { personalInfo, paymentInfo } = useCheckoutForm();
+  const { personalInfo, paymentInfo, onSubmit } = useCheckoutForm();
   console.log('personalInfo:', personalInfo);
   console.log('paymentInfo:', paymentInfo);
-  const onNext = () => {
-    //validate form
 
-    //submit data
-
-    //redirect to next page
-
-    router.dismissAll();
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      // Handle the case where there is no screen to go back to
-      console.warn('No screen to go back to');
-    }
-  };
   return (
     <KeyboardAwareScrollView>
-      <View style={{ gap: 10, flex: 1 }}>
+      <View style={{ gap: 10, flex: 1, backgroundColor: '#fff' }}>
         {personalInfo && (
           <View style={styles.dataContainer}>
             <View style={styles.dataContainerHeader}>
@@ -66,7 +52,7 @@ export default function ConfirmForm() {
           </View>
         )}
 
-        <CustomButton title="Submit" onPress={onNext} />
+        <CustomButton title="Submit" onPress={onSubmit} />
       </View>
     </KeyboardAwareScrollView>
   );

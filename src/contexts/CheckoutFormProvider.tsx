@@ -1,5 +1,5 @@
+import { router } from 'expo-router';
 import { createContext, useContext, PropsWithChildren, useState } from 'react';
-
 import * as z from 'zod';
 
 // Define a schema for the personal info form
@@ -15,7 +15,7 @@ export const PersonalInfoSchema = z.object({
 
 export type PersonalInfo = z.infer<typeof PersonalInfoSchema>;
 
-// Define a schema for the payement form
+// Define a schema for the payment form
 export const PaymentInfoSchema = z.object({
   cardNumber: z.string().length(16, {
     message: 'Card number is required!',
@@ -23,7 +23,6 @@ export const PaymentInfoSchema = z.object({
   expireDate: z.string().regex(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, {
     message: 'Expiry date is required!',
   }),
-
   cvv: z.coerce.number().min(100, { message: 'Cvv is required!' }).max(999),
 });
 
@@ -35,6 +34,7 @@ type CheckoutFormContext = {
   setPersonalInfo: (data: PersonalInfo) => void;
   paymentInfo: PaymentInfo | undefined;
   setPaymentInfo: (data: PaymentInfo) => void;
+  onSubmit: () => void;
 };
 
 const CheckoutFormContext = createContext<CheckoutFormContext>({
@@ -42,19 +42,44 @@ const CheckoutFormContext = createContext<CheckoutFormContext>({
   setPersonalInfo: () => {},
   paymentInfo: undefined,
   setPaymentInfo: () => {},
+  onSubmit: () => {},
 });
 
 export default function CheckoutFormProvider({ children }: PropsWithChildren) {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfo>();
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>();
 
+  const handleSetPersonalInfo = (data: PersonalInfo) => {
+    console.log('Setting personal info:', data);
+    setPersonalInfo(data);
+  };
+
+  const handleSetPaymentInfo = (data: PaymentInfo) => {
+    console.log('Setting payment info:', data);
+    setPaymentInfo(data);
+  };
+
+  const onSubmit = () => {
+    if (!personalInfo || !paymentInfo) {
+      console.log('The form is not complete');
+      return;
+    }
+
+    setPersonalInfo(undefined);
+    setPaymentInfo(undefined);
+
+    router.dismissAll();
+    router.back();
+  };
+
   return (
     <CheckoutFormContext.Provider
       value={{
         personalInfo,
-        setPersonalInfo,
+        setPersonalInfo: handleSetPersonalInfo,
         paymentInfo,
-        setPaymentInfo,
+        setPaymentInfo: handleSetPaymentInfo,
+        onSubmit,
       }}
     >
       {children}
