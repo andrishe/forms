@@ -1,19 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { Link } from 'expo-router';
-import React from 'react';
+import { Text, View, StyleSheet } from 'react-native';
 import CustomButton from '../../components/CustomButton';
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
 import { useCheckoutForm } from '../../contexts/CheckoutFormProvider';
 
 export default function ConfirmForm() {
   const { personalInfo, paymentInfo, onSubmit } = useCheckoutForm();
-  console.log('personalInfo:', personalInfo);
-  console.log('paymentInfo:', paymentInfo);
 
   return (
     <KeyboardAwareScrollView>
-      <View style={{ gap: 10, flex: 1, backgroundColor: '#fff' }}>
+      <View style={{ gap: 10, flex: 1 }}>
         {personalInfo && (
           <View style={styles.dataContainer}>
             <View style={styles.dataContainerHeader}>
@@ -27,7 +23,7 @@ export default function ConfirmForm() {
             </View>
             {Object.entries(personalInfo).map(([key, value]) => (
               <Text key={key}>
-                {key}: {value}
+                {key}: {value?.toString()}
               </Text>
             ))}
           </View>
@@ -46,7 +42,7 @@ export default function ConfirmForm() {
             </View>
             {Object.entries(paymentInfo).map(([key, value]) => (
               <Text key={key}>
-                {key}: {value}
+                {key}: {value?.toString()}
               </Text>
             ))}
           </View>

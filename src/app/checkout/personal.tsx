@@ -1,44 +1,51 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-
+import { View, StyleSheet } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import { router } from 'expo-router';
 import CustomTextInput from '../../components/CustomTextInput';
-
 import KeyboardAwareScrollView from '../../components/KeyboardAwareScrollView';
-import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import CheckoutFormProvider, {
+import {
+  useForm,
+  SubmitHandler,
+  FormProvider,
+  Controller,
+} from 'react-hook-form';
+import {
   PersonalInfo,
   PersonalInfoSchema,
+  useCheckoutForm,
 } from '../../contexts/CheckoutFormProvider';
-import { useCheckoutForm } from '../../contexts/CheckoutFormProvider';
-import RNPickerSelect from 'react-native-picker-select';
+
+import countries from '../../../assets/countries.json';
+import CustomPicker from '../../components/CustomPicker';
+import CustomDateTimePicker from '../../components/CustomDateTimePicker';
 
 export default function PersonalDetailsForm() {
-  const { personalInfo, setPersonalInfo } = useCheckoutForm();
+  const { setPersonalInfo, personalInfo } = useCheckoutForm();
+
   const form = useForm<PersonalInfo>({
     resolver: zodResolver(PersonalInfoSchema),
     defaultValues: personalInfo,
   });
 
   const onNext: SubmitHandler<PersonalInfo> = (data) => {
+    // the data is Valid
     setPersonalInfo(data);
+
+    // redirect next
     router.push('/checkout/payment');
   };
+
   return (
     <KeyboardAwareScrollView>
       <FormProvider {...form}>
         <CustomTextInput
           name="fullName"
           label="Full name"
-          placeholder="John Doe"
+          placeholder="Joe do"
         />
 
-        <CustomTextInput
-          name="address"
-          label="Address"
-          placeholder="4 rue de paris"
-        />
+        <CustomTextInput name="address" label="Address" placeholder="Address" />
 
         <View style={{ flexDirection: 'row', gap: 5 }}>
           <CustomTextInput
@@ -49,16 +56,15 @@ export default function PersonalDetailsForm() {
           />
           <CustomTextInput
             name="postcode"
-            label="Post Code"
+            label="Post code"
             placeholder="1234"
-            inputMode="numeric"
             containerStyle={{ flex: 1 }}
           />
         </View>
 
-        <RNPickerSelect
-          onValueChange={(value) => console.log(value)}
-          placeholder={{ label: 'Country' }}
+        <CustomPicker
+          name="country"
+          placeholder={{ label: 'Select country' }}
           items={countries.map((country) => ({
             label: country.name,
             value: country.code,
@@ -68,9 +74,11 @@ export default function PersonalDetailsForm() {
         <CustomTextInput
           name="phone"
           label="Phone number"
-          placeholder="0610234567"
+          placeholder="601234123123"
           inputMode="tel"
         />
+
+        <CustomDateTimePicker name="birthdate" />
 
         <CustomButton
           title="Next"
@@ -90,6 +98,5 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 'auto',
-    marginBottom: 20,
   },
 });

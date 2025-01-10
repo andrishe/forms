@@ -1,15 +1,15 @@
+import { ComponentProps } from 'react';
+import { useController } from 'react-hook-form';
 import {
-  StyleSheet,
-  Text,
-  View,
   TextInput,
+  StyleSheet,
+  View,
+  Text,
   StyleProp,
   ViewStyle,
 } from 'react-native';
-import React, { ComponentProps } from 'react';
-import { useController } from 'react-hook-form';
 
-type CustomTextInputProps = {
+type CustomTextInput = {
   label?: string;
   containerStyle?: StyleProp<ViewStyle>;
   name: string;
@@ -20,7 +20,7 @@ export default function CustomTextInput({
   containerStyle,
   name,
   ...textInputProps
-}: CustomTextInputProps) {
+}: CustomTextInput) {
   const {
     field: { value, onBlur, onChange },
     fieldState: { error },
@@ -40,27 +40,29 @@ export default function CustomTextInput({
           error ? styles.errorInput : {},
         ]}
       />
-      <Text style={styles.error}>{error?.message}</Text>
+      <Text style={styles.error} numberOfLines={1}>
+        {error?.message}
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   input: {
-    borderColor: 'gainsboro',
     borderWidth: 1,
+    borderColor: 'gainsboro',
     padding: 10,
     borderRadius: 5,
-    marginTop: 5,
+
+    marginTop: 4,
     marginBottom: 2,
   },
-
   errorInput: {
     borderColor: 'crimson',
   },
   label: {
     fontWeight: '600',
-    color: 'dimgrey',
+    color: 'dimgray',
   },
   error: {
     color: 'crimson',
